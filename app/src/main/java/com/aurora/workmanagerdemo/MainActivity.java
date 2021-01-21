@@ -6,18 +6,23 @@ import androidx.work.Constraints;
 import androidx.work.Data;
 import androidx.work.NetworkType;
 import androidx.work.OneTimeWorkRequest;
+import androidx.work.PeriodicWorkRequest;
 import androidx.work.WorkInfo;
 import androidx.work.WorkManager;
+import androidx.work.WorkRequest;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import java.nio.channels.NetworkChannel;
+import java.util.concurrent.TimeUnit;
 
 public class MainActivity extends AppCompatActivity {
 OneTimeWorkRequest oneTimeWorkRequest;
+    PeriodicWorkRequest saveRequest;
 TextView textView;
     public static final String KEY_COUNT_VALUE="key_count";
     @Override
@@ -35,6 +40,20 @@ TextView textView;
                 .setInputData(data)
                 .setConstraints(constraints)
                 .build();
+
+
+//         saveRequest =
+//                new PeriodicWorkRequest.Builder
+//                        (DemoWorker.class
+//                                , 15, TimeUnit.SECONDS
+//                                ,30,TimeUnit.SECONDS)
+//                        // Constraints
+//                        .setInputData(data)
+//                        .setConstraints(constraints)
+//                        .build();
+
+
+
         textView= (TextView) findViewById(R.id.textView);
 
 
@@ -57,5 +76,12 @@ TextView textView;
 
     public void onClick(View view) {
         WorkManager.getInstance(this).enqueue(oneTimeWorkRequest);
+        try {
+           // WorkManager.getInstance(this).enqueue(saveRequest);
+
+        }catch (Exception e){
+            Log.i("MYTAG",e.getMessage());
+        }
+
     }
 }

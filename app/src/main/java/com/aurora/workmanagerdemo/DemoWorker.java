@@ -1,9 +1,13 @@
 package com.aurora.workmanagerdemo;
 
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.Context;
+import android.os.Build;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
+import androidx.core.app.NotificationCompat;
 import androidx.work.Data;
 import androidx.work.Worker;
 import androidx.work.WorkerParameters;
@@ -31,7 +35,23 @@ public class DemoWorker extends Worker {
         Data dataToSend=new Data.Builder()
                 .putString(KEY_WORKER," Task Done Successfully")
                 .build();
+        showNotification("test","تست");
 
         return Result.success(dataToSend);
+    }
+    private void showNotification(String task, String desc) {
+        NotificationManager manager = (NotificationManager) getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
+        String channelId = "task_channel";
+        String channelName = "task_name";
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel channel = new
+                    NotificationChannel(channelId, channelName, NotificationManager.IMPORTANCE_DEFAULT);
+            manager.createNotificationChannel(channel);
+        }
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(getApplicationContext(), channelId)
+                .setContentTitle(task)
+                .setContentText(desc)
+                .setSmallIcon(R.mipmap.ic_launcher);
+        manager.notify(1, builder.build());
     }
 }
